@@ -13,7 +13,7 @@ export const Button = ({
   ...props
 }: ButtonProps) => {
   const variants = {
-    primary: '',
+    primary: 'rounded-lg border-2 border-white/10 bg-[#7F56D9] text-white shadow-[0_1px_2px_0_rgba(16,24,40,0.05),inset_0_-2px_0_0_rgba(16,24,40,0.05),inset_0_0_0_1px_rgba(16,24,40,0.18)]',
     secondary: '',
     outline: 'border',
     ghost: '',
@@ -22,8 +22,8 @@ export const Button = ({
   const sizes = {
     sm: '',
     md: '',
-    lg: '',
-    full: 'w-full',
+    lg: 'h-11 px-4 py-2.5 text-[16px] font-semibold leading-[24px] tracking-[0]',
+    full: 'h-11 w-full px-4 py-2.5 text-[16px] font-semibold leading-[24px] tracking-[0]',
   };
 
   return (
