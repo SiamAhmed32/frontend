@@ -8,6 +8,8 @@ export interface ExamQuestion {
   text: string;
   options: ExamOption[];
   correctOptionId: string;
+  /** Topic chips from `/exams/[id]/setup`; empty/absent = applies to whole subject when filtering */
+  topicSelectionIds?: string[];
 }
 
 export interface ExamTopic {
@@ -59,4 +61,6 @@ export interface ExamResult {
   score: number;
   timeTakenSeconds: number;
   submittedAt: string;
+  /** Questions included in this attempt (order preserved) */
+  questionIds?: string[];
 }

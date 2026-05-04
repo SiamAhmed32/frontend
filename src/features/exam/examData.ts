@@ -15,6 +15,7 @@ export const examSubjects: ExamSubject[] = [
     questions: [
       {
         id: 'physics-1',
+        topicSelectionIds: ['work-power-energy'],
         text: 'একটি রেফ্রিজারেটরের কার্যগুণক 4.61। ঠান্ডা প্রকোষ্ঠে 250 J অপসারণ করলে প্রতিবেশে কৃত কাজের পরিমাণ কত?',
         correctOptionId: 'physics-1-b',
         options: [
@@ -26,6 +27,7 @@ export const examSubjects: ExamSubject[] = [
       },
       {
         id: 'physics-2',
+        topicSelectionIds: ['work-power-energy'],
         text: 'তাপীয় সাম্যতায় থাকা বস্তুগুলোর মধ্যে নিচের কোনটির আদান-প্রদান ঘটে না?',
         correctOptionId: 'physics-2-b',
         options: [
@@ -37,6 +39,7 @@ export const examSubjects: ExamSubject[] = [
       },
       {
         id: 'physics-3',
+        topicSelectionIds: ['material-structure'],
         text: 'কোনটির তাপন ক্ষমতা সবচেয়ে বেশি?',
         correctOptionId: 'physics-3-c',
         options: [
@@ -48,6 +51,7 @@ export const examSubjects: ExamSubject[] = [
       },
       {
         id: 'physics-4',
+        topicSelectionIds: ['circular-motion'],
         text: 'একটি কার্নো ইঞ্জিন 1200 K ও 600 K তাপমাত্রায় যে দক্ষতায় কাজ করে, 100 K ও T K তাপমাত্রায় কাজ করলেও একই দক্ষতা প্রদর্শন করে। T এর মান কত?',
         correctOptionId: 'physics-4-c',
         options: [
@@ -59,6 +63,7 @@ export const examSubjects: ExamSubject[] = [
       },
       {
         id: 'physics-5',
+        topicSelectionIds: ['first-newtonian'],
         text: 'নিচের কোন গ্যাসের জন্য রুদ্ধতাপীয় প্রক্রিয়ায় চাপ বেশি বাড়ে?',
         correctOptionId: 'physics-5-d',
         options: [
@@ -70,6 +75,7 @@ export const examSubjects: ExamSubject[] = [
       },
       {
         id: 'physics-6',
+        topicSelectionIds: ['first-measurement'],
         text: '০°C তাপমাত্রা কেলভিন স্কেলে কত?',
         correctOptionId: 'physics-6-b',
         options: [
@@ -81,6 +87,7 @@ export const examSubjects: ExamSubject[] = [
       },
       {
         id: 'physics-7',
+        topicSelectionIds: ['work-power-energy'],
         text: 'একটি রোধ R এ কারেন্ট I প্রবাহিত হলে জুলের তাপ উৎপাদনের হার (শক্তি) কত?',
         correctOptionId: 'physics-7-b',
         options: [
@@ -104,6 +111,7 @@ export const examSubjects: ExamSubject[] = [
     questions: [
       {
         id: 'chemistry-1',
+        topicSelectionIds: ['atom'],
         text: 'pH মান 7 হলে দ্রবণটি কেমন?',
         correctOptionId: 'chemistry-1-b',
         options: [
@@ -124,6 +132,7 @@ export const examSubjects: ExamSubject[] = [
     questions: [
       {
         id: 'math-1',
+        topicSelectionIds: ['algebra'],
         text: '২ এর বর্গমূল কত?',
         correctOptionId: 'math-1-b',
         options: [
@@ -144,6 +153,7 @@ export const examSubjects: ExamSubject[] = [
     questions: [
       {
         id: 'bio-1',
+        topicSelectionIds: ['cell'],
         text: 'কোষের শক্তির কারখানা কোনটি?',
         correctOptionId: 'bio-1-b',
         options: [

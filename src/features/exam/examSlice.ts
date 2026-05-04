@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { examListCards, examSubjects } from './examData';
 import type { ExamListCard, ExamResult, ExamSubject } from './examTypes';
+import { getSessionQuestionPool } from './sessionQuestions';
+import { getDefaultTopicSelectionForSubject } from './topicTree';
 
 interface ExamSetup {
   subjectId: string | null;
@@ -44,7 +46,7 @@ const examSlice = createSlice({
       const subject = state.subjects.find((item) => item.id === action.payload);
 
       state.setup.subjectId = action.payload;
-      state.setup.selectedTopicIds = subject?.topics.map((topic) => topic.id) ?? [];
+      state.setup.selectedTopicIds = getDefaultTopicSelectionForSubject(action.payload);
       state.setup.questionCount = 12;
       state.setup.durationMinutes = subject?.durationMinutes ?? 30;
       state.setup.startedAt = null;
@@ -91,11 +93,14 @@ const examSlice = createSlice({
         return;
       }
 
-      const correct = subject.questions.filter(
+      const sessionQuestions = getSessionQuestionPool(subject, state.setup);
+      const questionIds = sessionQuestions.map((question) => question.id);
+
+      const correct = sessionQuestions.filter(
         (question) => state.answers[question.id] === question.correctOptionId
       ).length;
-      const answered = subject.questions.filter((question) => state.answers[question.id]).length;
-      const totalQuestions = subject.questions.length;
+      const answered = sessionQuestions.filter((question) => state.answers[question.id]).length;
+      const totalQuestions = sessionQuestions.length;
       const unanswered = totalQuestions - answered;
       const wrong = answered - correct;
       const submittedAt = new Date().toISOString();
@@ -116,6 +121,7 @@ const examSlice = createSlice({
         score: correct,
         timeTakenSeconds,
         submittedAt,
+        questionIds,
       };
     },
     resetExamSession: (state) => {

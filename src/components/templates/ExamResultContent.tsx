@@ -18,6 +18,7 @@ import {
   selectExamAnswers,
   selectExamSetup,
   selectResultBySubjectId,
+  selectSessionQuestions,
   selectSubjectById,
 } from '@/features/exam/selectors';
 import { cn } from '@/lib/utils';
@@ -129,6 +130,7 @@ export function ExamResultContent() {
   const subject = useAppSelector((state) => selectSubjectById(state, subjectId));
   const result = useAppSelector((state) => selectResultBySubjectId(state, subjectId));
   const answers = useAppSelector(selectExamAnswers);
+  const sessionQuestions = useAppSelector((state) => selectSessionQuestions(state, subjectId));
 
   useEffect(() => {
     if (setup.subjectId !== subjectId) {
@@ -137,7 +139,11 @@ export function ExamResultContent() {
   }, [dispatch, setup.subjectId, subjectId]);
 
   const questions = subject?.questions ?? [];
-  const reviewQuestions = questions;
+  const reviewQuestions = result?.questionIds?.length
+    ? questions.filter((q) => result.questionIds?.includes(q.id))
+    : sessionQuestions.length
+      ? sessionQuestions
+      : questions;
   const correctCount = reviewQuestions.filter(
     (question) => answers[question.id] === question.correctOptionId
   ).length;

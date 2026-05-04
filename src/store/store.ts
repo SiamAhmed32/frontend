@@ -14,7 +14,7 @@ import authReducer from '@/features/auth/authSlice';
 import examReducer from '@/features/exam/examSlice';
 
 const authPersistConfig = {
-  key: 'auth',
+  key: 'auth_v2',
   storage,
 };
 

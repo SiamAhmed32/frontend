@@ -1,11 +1,12 @@
 'use client';
 
+import Image from 'next/image';
 import { BookCopy, Clock3, FileText } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/atoms/Button';
 import { answerQuestion, selectSubject, startExamSession, submitExam } from '@/features/exam/examSlice';
-import { selectExamAnswers, selectExamSetup, selectSubjectById } from '@/features/exam/selectors';
+import { selectExamAnswers, selectExamSetup, selectSessionQuestions, selectSubjectById } from '@/features/exam/selectors';
 import { cn } from '@/lib/utils';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
@@ -27,7 +28,15 @@ function MetaPill({
   );
 }
 
-function ExamProgressBar({ progress }: { progress: number }) {
+function ExamProgressBar({
+  progress,
+  showClockAsset,
+  onClockError,
+}: {
+  progress: number;
+  showClockAsset: boolean;
+  onClockError: () => void;
+}) {
   const clamped = Math.max(0, Math.min(progress, 100));
 
   return (
@@ -40,7 +49,19 @@ function ExamProgressBar({ progress }: { progress: number }) {
         className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#7F56D9] p-1 shadow-[0_2px_10px_rgba(127,86,217,0.35)]"
         style={{ left: `${clamped}%` }}
       >
-        <Clock3 className="size-4 text-white" strokeWidth={2.4} />
+        {showClockAsset ? (
+          <Image
+            src="/Clock Alarm.png"
+            alt=""
+            width={16}
+            height={16}
+            className="size-4 object-contain"
+            aria-hidden
+            onError={onClockError}
+          />
+        ) : (
+          <Clock3 className="size-4 text-white" strokeWidth={2.4} />
+        )}
       </div>
     </div>
   );
@@ -87,7 +108,11 @@ export function ExamSessionContent() {
   const router = useRouter();
   const setup = useAppSelector(selectExamSetup);
   const subject = useAppSelector((state) => selectSubjectById(state, subjectId));
+  const questions = useAppSelector((state) => selectSessionQuestions(state, subjectId));
   const answers = useAppSelector(selectExamAnswers);
+  const [clockAssetAvailable, setClockAssetAvailable] = useState(true);
+  const [tick, setTick] = useState(0);
+  const didSubmit = useRef(false);
 
   useEffect(() => {
     if (setup.subjectId !== subjectId) {
@@ -101,14 +126,40 @@ export function ExamSessionContent() {
     }
   }, [dispatch, setup.startedAt, setup.subjectId, subjectId]);
 
-  const questions = subject?.questions ?? [];
-
   const answeredCount = questions.filter((question) => Boolean(answers[question.id])).length;
   const progress = questions.length ? (answeredCount / questions.length) * 100 : 0;
   const subjectTitle = subject?.title ?? 'পদার্থবিজ্ঞান';
+  const durationSeconds = (setup.durationMinutes ?? subject?.durationMinutes ?? 30) * 60;
+
+  const remainingSeconds = useMemo(() => {
+    if (!setup.startedAt) {
+      return durationSeconds;
+    }
+    const elapsed = Math.max(0, Math.floor((Date.now() - new Date(setup.startedAt).getTime()) / 1000));
+    return Math.max(durationSeconds - elapsed, 0);
+  }, [durationSeconds, setup.startedAt, tick]);
+
+  useEffect(() => {
+    if (!setup.startedAt) return;
+    if (remainingSeconds > 0) return;
+    if (didSubmit.current) return;
+    didSubmit.current = true;
+    dispatch(submitExam(subjectId));
+    router.replace(`/exams/${subjectId}/result`);
+  }, [dispatch, remainingSeconds, router, setup.startedAt, subjectId]);
+
+  useEffect(() => {
+    if (!setup.startedAt) return;
+    const timer = window.setInterval(() => {
+      setTick((value) => value + 1);
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, [setup.startedAt]);
+
+  const timeLabel = `${toBengaliDigits(Math.max(0, Math.ceil(remainingSeconds / 60)))} মিনিট`;
 
   return (
-    <main className="min-h-screen w-full overflow-y-auto px-7 pb-14 pt-8 sm:px-8 lg:px-12 lg:pt-10">
+    <main className="min-h-screen w-full overflow-y-auto px-7 pb-10 pt-6 sm:px-8 lg:px-12 lg:pt-8">
       <div className="mx-auto w-full max-w-[880px] lg:mx-0">
         <header>
           <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
@@ -124,7 +175,7 @@ export function ExamSessionContent() {
                 />
                 <MetaPill
                   icon={<Clock3 className="size-4" strokeWidth={2} />}
-                  label={`${toBengaliDigits(setup.durationMinutes ?? 30)} মিনিট`}
+                  label={timeLabel}
                 />
               </div>
             </div>
@@ -141,17 +192,21 @@ export function ExamSessionContent() {
             </Button>
           </div>
 
-          <ExamProgressBar progress={progress || 55} />
+          <ExamProgressBar
+            progress={progress || 55}
+            showClockAsset={clockAssetAvailable}
+            onClockError={() => setClockAssetAvailable(false)}
+          />
         </header>
 
-        <section className="mt-8 space-y-10">
+        <section className="mt-6 space-y-7">
           {questions.map((question, idx) => (
             <article key={question.id}>
               <p className="font-display-bn text-[16px] font-semibold leading-[160%] text-[#101828]">
                 {toBengaliDigits(idx + 1)}. {question.text}
               </p>
 
-              <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-2">
+              <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-2">
                 {question.options.map((opt) => (
                   <OptionButton
                     key={opt.id}

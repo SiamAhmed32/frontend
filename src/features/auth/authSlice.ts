@@ -42,7 +42,18 @@ interface LoginPayload {
   password: string;
 }
 
-const normalizePhone = (phone: string) => phone.trim();
+/** Persist/login compare key — keeps +880 / 0-prefix Bangladesh numbers consistent */
+export const normalizePhoneKey = (raw: string): string => {
+  const digits = raw.replace(/\D/g, '');
+  if (!digits) return '';
+  if (digits.startsWith('880') && digits.length >= 12) {
+    return `0${digits.slice(3, 13)}`;
+  }
+  if (digits.length > 11) {
+    return digits.slice(-11);
+  }
+  return digits;
+};
 
 const normalizeName = (name: string) => name.trim().toLowerCase();
 
@@ -52,7 +63,7 @@ const authSlice = createSlice({
   reducers: {
     registerUser: {
       reducer: (state, action: PayloadAction<RegisterPreparedPayload>) => {
-        const phone = normalizePhone(action.payload.phone);
+        const phone = normalizePhoneKey(action.payload.phone);
         const name = action.payload.name.trim();
         const existingUser = state.users.find((user) => user.phone === phone);
 
@@ -97,7 +108,7 @@ const authSlice = createSlice({
       }),
     },
     loginUser: (state, action: PayloadAction<LoginPayload>) => {
-      const phone = normalizePhone(action.payload.phone);
+      const phone = normalizePhoneKey(action.payload.phone);
       const user = state.users.find((item) => item.phone === phone);
 
       if (!user) {
