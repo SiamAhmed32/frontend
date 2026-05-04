@@ -3,7 +3,12 @@ import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit';
 export interface User {
   id: string;
   name: string;
-  contact: string;
+  phone: string;
+  level: string;
+  batch: string;
+  group: string;
+  version: string;
+  password: string;
 }
 
 interface AuthState {
@@ -18,16 +23,39 @@ const initialState: AuthState = {
   error: null,
 };
 
-interface RegisterPayload {
+export interface RegisterPayload {
   name: string;
-  contact: string;
+  phone: string;
+  level: string;
+  batch: string;
+  group: string;
+  version: string;
+  password: string;
 }
 
 interface RegisterPreparedPayload extends RegisterPayload {
   id: string;
 }
 
-const normalizeContact = (contact: string) => contact.trim().toLowerCase();
+interface LoginPayload {
+  phone: string;
+  password: string;
+}
+
+/** Persist/login compare key — keeps +880 / 0-prefix Bangladesh numbers consistent */
+export const normalizePhoneKey = (raw: string): string => {
+  const digits = raw.replace(/\D/g, '');
+  if (!digits) return '';
+  if (digits.startsWith('880') && digits.length >= 12) {
+    return `0${digits.slice(3, 13)}`;
+  }
+  if (digits.length > 11) {
+    return digits.slice(-11);
+  }
+  return digits;
+};
+
+const normalizeName = (name: string) => name.trim().toLowerCase();
 
 const authSlice = createSlice({
   name: 'auth',
@@ -35,10 +63,23 @@ const authSlice = createSlice({
   reducers: {
     registerUser: {
       reducer: (state, action: PayloadAction<RegisterPreparedPayload>) => {
-        const contact = normalizeContact(action.payload.contact);
-        const existingUser = state.users.find((user) => user.contact === contact);
+        const phone = normalizePhoneKey(action.payload.phone);
+        const name = action.payload.name.trim();
+        const existingUser = state.users.find((user) => user.phone === phone);
 
         if (existingUser) {
+          if (normalizeName(existingUser.name) !== normalizeName(name)) {
+            state.currentUserId = null;
+            state.error = 'This phone number is already registered with a different name.';
+            return;
+          }
+
+          existingUser.name = name;
+          existingUser.level = action.payload.level;
+          existingUser.batch = action.payload.batch;
+          existingUser.group = action.payload.group;
+          existingUser.version = action.payload.version;
+          existingUser.password = action.payload.password;
           state.currentUserId = existingUser.id;
           state.error = null;
           return;
@@ -46,8 +87,13 @@ const authSlice = createSlice({
 
         const user: User = {
           id: action.payload.id,
-          name: action.payload.name.trim(),
-          contact,
+          name,
+          phone,
+          level: action.payload.level,
+          batch: action.payload.batch,
+          group: action.payload.group,
+          version: action.payload.version,
+          password: action.payload.password,
         };
 
         state.users.push(user);
@@ -61,13 +107,19 @@ const authSlice = createSlice({
         },
       }),
     },
-    loginUser: (state, action: PayloadAction<string>) => {
-      const contact = normalizeContact(action.payload);
-      const user = state.users.find((item) => item.contact === contact);
+    loginUser: (state, action: PayloadAction<LoginPayload>) => {
+      const phone = normalizePhoneKey(action.payload.phone);
+      const user = state.users.find((item) => item.phone === phone);
 
       if (!user) {
         state.currentUserId = null;
-        state.error = 'No registered user found for this email or phone.';
+        state.error = 'No registered user found for this phone number.';
+        return;
+      }
+
+      if (user.password !== action.payload.password) {
+        state.currentUserId = null;
+        state.error = 'Incorrect password.';
         return;
       }
 

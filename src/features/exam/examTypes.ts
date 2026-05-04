@@ -8,6 +8,8 @@ export interface ExamQuestion {
   text: string;
   options: ExamOption[];
   correctOptionId: string;
+  /** Topic chips from `/exams/[id]/setup`; empty/absent = applies to whole subject when filtering */
+  topicSelectionIds?: string[];
 }
 
 export interface ExamTopic {
@@ -24,6 +26,32 @@ export interface ExamSubject {
   questions: ExamQuestion[];
 }
 
+/**
+ * Fallback tile art when raster under `emojiFile` is missing or fails to load.
+ * Matches Mock Test PNG order (ক, A, calculator, ruler/set square, atom, flask, DNA, chip).
+ */
+export type ExamSubjectTilePreset =
+  | 'bengali-ka'
+  | 'latin-a'
+  | 'calculator'
+  | 'geometry'
+  | 'atom'
+  | 'flask'
+  | 'dna'
+  | 'chip';
+
+export interface ExamListCard {
+  id: string;
+  subjectId: string;
+  title: string;
+  iconBg: string;
+  /** Foreground stroke / glyph color inside the emoji tile */
+  iconFg: string;
+  tilePreset: ExamSubjectTilePreset;
+  /** Filename only, served from `/mockeTest/emojis/{emojiFile}` */
+  emojiFile?: string | null;
+}
+
 export interface ExamResult {
   subjectId: string;
   totalQuestions: number;
@@ -31,5 +59,8 @@ export interface ExamResult {
   wrong: number;
   unanswered: number;
   score: number;
+  timeTakenSeconds: number;
   submittedAt: string;
+  /** Questions included in this attempt (order preserved) */
+  questionIds?: string[];
 }

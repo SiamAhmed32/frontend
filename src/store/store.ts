@@ -13,22 +13,25 @@ import storage from 'redux-persist/lib/storage';
 import authReducer from '@/features/auth/authSlice';
 import examReducer from '@/features/exam/examSlice';
 
+const authPersistConfig = {
+  key: 'auth_v2',
+  storage,
+};
+
+/** Dummy exam catalogue must always match `examData.ts`; do not hydrate stale copies from disk. */
+const examPersistConfig = {
+  key: 'panjeri-exam-v2',
+  storage,
+  blacklist: ['subjects', 'listCards'],
+};
+
 const rootReducer = combineReducers({
-  auth: authReducer,
-  exam: examReducer,
+  auth: persistReducer(authPersistConfig, authReducer),
+  exam: persistReducer(examPersistConfig, examReducer),
 });
 
-const persistedReducer = persistReducer(
-  {
-    key: 'panjeri-exam',
-    storage,
-    whitelist: ['auth', 'exam'],
-  },
-  rootReducer
-);
-
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

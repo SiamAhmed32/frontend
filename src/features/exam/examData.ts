@@ -1,4 +1,4 @@
-import type { ExamSubject } from './examTypes';
+import type { ExamListCard, ExamSubject } from './examTypes';
 
 export const examSubjects: ExamSubject[] = [
   {
@@ -7,15 +7,16 @@ export const examSubjects: ExamSubject[] = [
     iconLabel: 'ক',
     durationMinutes: 30,
     topics: [
-      { id: 'measurement', title: 'ভৌতজগত ও পরিমাপ' },
+      { id: 'measurement', title: 'ভৌতজগৎ ও পরিমাপ' },
       { id: 'vector', title: 'ভেক্টর' },
-      { id: 'motion', title: 'গতি বিদ্যা' },
+      { id: 'motion', title: 'গতিবিদ্যা' },
       { id: 'newtonian', title: 'নিউটনিয়ান বলবিদ্যা' },
     ],
     questions: [
       {
         id: 'physics-1',
-        text: 'একটি রেফ্রিজারেটরের কার্যকারিতা সহগ 4.61। 250 J অপসারণ করলে কাজের পরিমাণ কত?',
+        topicSelectionIds: ['work-power-energy'],
+        text: 'একটি রেফ্রিজারেটরের কার্যগুণক 4.61। ঠান্ডা প্রকোষ্ঠে 250 J অপসারণ করলে প্রতিবেশে কৃত কাজের পরিমাণ কত?',
         correctOptionId: 'physics-1-b',
         options: [
           { id: 'physics-1-a', label: '46 J' },
@@ -26,7 +27,8 @@ export const examSubjects: ExamSubject[] = [
       },
       {
         id: 'physics-2',
-        text: 'তাপীয় সাম্যতায় থাকা বস্তুগুলোর মধ্যে কোনটির আদান-প্রদান ঘটে না?',
+        topicSelectionIds: ['work-power-energy'],
+        text: 'তাপীয় সাম্যতায় থাকা বস্তুগুলোর মধ্যে নিচের কোনটির আদান-প্রদান ঘটে না?',
         correctOptionId: 'physics-2-b',
         options: [
           { id: 'physics-2-a', label: 'তাপ' },
@@ -37,24 +39,62 @@ export const examSubjects: ExamSubject[] = [
       },
       {
         id: 'physics-3',
-        text: 'কোনটির তাপণ ক্ষমতা সবচেয়ে বেশি?',
-        correctOptionId: 'physics-3-b',
+        topicSelectionIds: ['material-structure'],
+        text: 'কোনটির তাপন ক্ষমতা সবচেয়ে বেশি?',
+        correctOptionId: 'physics-3-c',
         options: [
-          { id: 'physics-3-a', label: 'ফিট' },
-          { id: 'physics-3-b', label: 'অ্যানথ্রাসাইট' },
-          { id: 'physics-3-c', label: 'লিগনাইট' },
+          { id: 'physics-3-a', label: 'পিট' },
+          { id: 'physics-3-b', label: 'লিগনাইট' },
+          { id: 'physics-3-c', label: 'অ্যানথ্রাসাইট' },
           { id: 'physics-3-d', label: 'বিটুমিনাস' },
         ],
       },
       {
         id: 'physics-4',
-        text: 'একটি কার্নো ইঞ্জিন 1200K ও 600K তাপমাত্রায় কাজ করে। T এর মান কত?',
+        topicSelectionIds: ['circular-motion'],
+        text: 'একটি কার্নো ইঞ্জিন 1200 K ও 600 K তাপমাত্রায় যে দক্ষতায় কাজ করে, 100 K ও T K তাপমাত্রায় কাজ করলেও একই দক্ষতা প্রদর্শন করে। T এর মান কত?',
         correctOptionId: 'physics-4-c',
         options: [
           { id: 'physics-4-a', label: '80 K' },
           { id: 'physics-4-b', label: '70 K' },
           { id: 'physics-4-c', label: '50 K' },
           { id: 'physics-4-d', label: '60 K' },
+        ],
+      },
+      {
+        id: 'physics-5',
+        topicSelectionIds: ['first-newtonian'],
+        text: 'নিচের কোন গ্যাসের জন্য রুদ্ধতাপীয় প্রক্রিয়ায় চাপ বেশি বাড়ে?',
+        correctOptionId: 'physics-5-d',
+        options: [
+          { id: 'physics-5-a', label: 'হাইড্রোজেন' },
+          { id: 'physics-5-b', label: 'অক্সিজেন' },
+          { id: 'physics-5-c', label: 'নাইট্রোজেন' },
+          { id: 'physics-5-d', label: 'হিলিয়াম' },
+        ],
+      },
+      {
+        id: 'physics-6',
+        topicSelectionIds: ['first-measurement'],
+        text: '০°C তাপমাত্রা কেলভিন স্কেলে কত?',
+        correctOptionId: 'physics-6-b',
+        options: [
+          { id: 'physics-6-a', label: '০ K' },
+          { id: 'physics-6-b', label: '২৭৩.১৫ K' },
+          { id: 'physics-6-c', label: '২৭৩ K' },
+          { id: 'physics-6-d', label: '২৯৮.১৫ K' },
+        ],
+      },
+      {
+        id: 'physics-7',
+        topicSelectionIds: ['work-power-energy'],
+        text: 'একটি রোধ R এ কারেন্ট I প্রবাহিত হলে জুলের তাপ উৎপাদনের হার (শক্তি) কত?',
+        correctOptionId: 'physics-7-b',
+        options: [
+          { id: 'physics-7-a', label: 'I/R' },
+          { id: 'physics-7-b', label: 'I²R' },
+          { id: 'physics-7-c', label: 'IR²' },
+          { id: 'physics-7-d', label: 'IR' },
         ],
       },
     ],
@@ -71,6 +111,7 @@ export const examSubjects: ExamSubject[] = [
     questions: [
       {
         id: 'chemistry-1',
+        topicSelectionIds: ['atom'],
         text: 'pH মান 7 হলে দ্রবণটি কেমন?',
         correctOptionId: 'chemistry-1-b',
         options: [
@@ -81,5 +122,122 @@ export const examSubjects: ExamSubject[] = [
         ],
       },
     ],
+  },
+  {
+    id: 'higher-math',
+    title: 'উচ্চতর গণিত',
+    iconLabel: 'গ',
+    durationMinutes: 25,
+    topics: [{ id: 'algebra', title: 'বীজগণিত' }],
+    questions: [
+      {
+        id: 'math-1',
+        topicSelectionIds: ['algebra'],
+        text: '২ এর বর্গমূল কত?',
+        correctOptionId: 'math-1-b',
+        options: [
+          { id: 'math-1-a', label: '3' },
+          { id: 'math-1-b', label: '√2' },
+          { id: 'math-1-c', label: '4' },
+          { id: 'math-1-d', label: '1' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'biology',
+    title: 'জীববিজ্ঞান',
+    iconLabel: 'জ',
+    durationMinutes: 25,
+    topics: [{ id: 'cell', title: 'কোষ' }],
+    questions: [
+      {
+        id: 'bio-1',
+        topicSelectionIds: ['cell'],
+        text: 'কোষের শক্তির কারখানা কোনটি?',
+        correctOptionId: 'bio-1-b',
+        options: [
+          { id: 'bio-1-a', label: 'নিউক্লিয়াস' },
+          { id: 'bio-1-b', label: 'মাইটোকন্ড্রিয়া' },
+          { id: 'bio-1-c', label: 'রাইবোসোম' },
+          { id: 'bio-1-d', label: 'গলজি বডি' },
+        ],
+      },
+    ],
+  },
+];
+
+export const examListCards: ExamListCard[] = [
+  {
+    id: 'list-1',
+    subjectId: 'physics',
+    title: 'পদার্থবিজ্ঞান',
+    iconBg: '#FFEDD5',
+    iconFg: '#EA580C',
+    tilePreset: 'bengali-ka',
+    emojiFile: 'fi_16917496.png',
+  },
+  {
+    id: 'list-2',
+    subjectId: 'chemistry',
+    title: 'রসায়ন',
+    iconBg: '#DCFCE7',
+    iconFg: '#166534',
+    tilePreset: 'latin-a',
+    emojiFile: 'fi_16917496 (1).png',
+  },
+  {
+    id: 'list-3',
+    subjectId: 'higher-math',
+    title: 'উচ্চতর গণিত',
+    iconBg: '#FCE7F3',
+    iconFg: '#BE123C',
+    tilePreset: 'calculator',
+    emojiFile: 'fi_16917496 (2).png',
+  },
+  {
+    id: 'list-4',
+    subjectId: 'biology',
+    title: 'জীববিজ্ঞান',
+    iconBg: '#DBEAFE',
+    iconFg: '#1D4ED8',
+    tilePreset: 'geometry',
+    emojiFile: 'fi_16917496 (3).png',
+  },
+  {
+    id: 'list-5',
+    subjectId: 'physics',
+    title: 'পদার্থবিজ্ঞান',
+    iconBg: '#F3E8FF',
+    iconFg: '#7C3AED',
+    tilePreset: 'atom',
+    emojiFile: 'fi_16917383.png',
+  },
+  {
+    id: 'list-6',
+    subjectId: 'chemistry',
+    title: 'রসায়ন',
+    iconBg: '#FFEDD5',
+    iconFg: '#EA580C',
+    tilePreset: 'flask',
+    emojiFile: 'test-tube-01.png',
+  },
+  {
+    id: 'list-7',
+    subjectId: 'higher-math',
+    title: 'উচ্চতর গণিত',
+    iconBg: '#D1FAE5',
+    iconFg: '#059669',
+    tilePreset: 'dna',
+    emojiFile: 'fi_620401.png',
+  },
+  {
+    id: 'list-8',
+    subjectId: 'biology',
+    title: 'জীববিজ্ঞান',
+    iconBg: '#FEE4E4',
+    iconFg: '#DC2626',
+    tilePreset: 'chip',
+    emojiFile: 'Vector (1).png',
   },
 ];
