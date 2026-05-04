@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { examListCards, examSubjects } from './examData';
 import type { ExamListCard, ExamResult, ExamSubject } from './examTypes';
 import { getSessionQuestionPool } from './sessionQuestions';
-import { getDefaultTopicSelectionForSubject } from './topicTree';
 
 interface ExamSetup {
   subjectId: string | null;
@@ -46,7 +45,8 @@ const examSlice = createSlice({
       const subject = state.subjects.find((item) => item.id === action.payload);
 
       state.setup.subjectId = action.payload;
-      state.setup.selectedTopicIds = getDefaultTopicSelectionForSubject(action.payload);
+      // Start empty so user explicitly selects topics on step-1.
+      state.setup.selectedTopicIds = [];
       state.setup.questionCount = 12;
       state.setup.durationMinutes = subject?.durationMinutes ?? 30;
       state.setup.startedAt = null;

@@ -1,14 +1,16 @@
 'use client';
 
-import { ArrowRight, ChevronRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/atoms/Button';
 import { FixedBottomActionBar } from '@/components/organisms/FixedBottomActionBar';
+import { ExamStepHeader } from '@/components/organisms/ExamStepHeader';
+import { QuestionTypeSelector } from '@/components/organisms/QuestionTypeSelector';
 import { selectSubject, setQuestionType } from '@/features/exam/examSlice';
 import { selectExamSetup, selectSubjectById } from '@/features/exam/selectors';
-import { cn } from '@/lib/utils';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { toBengaliDigits } from '@/lib/bengaliDigits';
 
 const RULES = [
   'প্রতিটি MCQ প্রশ্নের জন্য চারটি করে অপশন থাকবে। সঠিক উত্তরটি বাছাই করতে হবে। একই প্রশ্নের একাধিক উত্তর থাকলে কোনো প্রশ্নের সঠিক উত্তর না থাকলে সবচেয়ে কাছাকাছি উত্তরটি বাছাই করতে হবে।',
@@ -19,42 +21,6 @@ const RULES = [
   'নির্দিষ্ট সময়ের ভেতরে দেওয়া শুভমান প্রথমবারের কুইজটির মার্কস লিডারবোর্ডে আসবে।',
   'টাইম শেষেও প্র্যাকটিস এক্সাম দেওয়া যাবে, তবে সেগুলোর মার্কস লিডারবোর্ডে আসবে না।',
 ];
-
-const toBengaliDigits = (value: number) =>
-  value.toString().replace(/\d/g, (digit) => '০১২৩৪৫৬৭৮৯'[Number(digit)] ?? digit);
-
-function StepProgress() {
-  return (
-    <div className="mt-[13px] grid h-[5px] grid-cols-3 gap-5">
-      <span className="h-[5px] rounded-[200px] bg-[#7F56D9]" />
-      <span className="h-[5px] rounded-[200px] bg-[#7F56D9]" />
-      <span className="h-[5px] rounded-[200px] bg-[#7F56D9]" />
-    </div>
-  );
-}
-
-function ChoiceButton({
-  active,
-  children,
-  onClick,
-}: {
-  active: boolean;
-  children: React.ReactNode;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        'flex h-14 flex-1 items-center justify-center rounded-2xl font-["Inter",sans-serif] text-[16px] font-semibold leading-6 outline-none transition focus-visible:ring-2 focus-visible:ring-[#7F56D9] focus-visible:ring-offset-2',
-        active ? 'bg-[#7F56D9] text-white' : 'bg-transparent text-[#98A2B3]'
-      )}
-    >
-      {children}
-    </button>
-  );
-}
 
 export function ExamConfirmContent() {
   const params = useParams<{ id?: string }>();
@@ -75,49 +41,20 @@ export function ExamConfirmContent() {
   return (
     <main className="relative min-h-screen overflow-hidden px-5 pb-[128px] pt-8 sm:px-8 lg:px-12 lg:pt-[55px]">
       <div className="relative mx-auto w-full max-w-[891px] lg:mx-0">
-        <div className="flex min-h-[22px] flex-wrap items-center gap-2.5">
-          <span className="font-display-bn text-[20px] font-bold leading-none text-[#1C1C1C]">
-            মক টেস্ট
-          </span>
-          <ChevronRight className="size-5 text-[#242424]" />
-          <span className="font-display-bn text-[16px] font-semibold leading-[140%] text-[#1C1C1C]">
-            {subjectTitle}
-          </span>
-        </div>
-
-        <section className="mt-4">
-          <div className="flex min-h-[25px] items-center justify-between gap-4">
-            <h1 className="font-display-bn text-[18px] font-semibold leading-[140%] text-[#101828]">
-              নিশ্চিত কর
-            </h1>
-            <span className="shrink-0 font-display-bn text-[16px] font-semibold leading-[140%] text-[#1C1C1C]">
-              ৩/৩ স্টেপ
-            </span>
-          </div>
-          <StepProgress />
-        </section>
+        <ExamStepHeader
+          sectionLabel="মক টেস্ট"
+          subjectTitle={subjectTitle}
+          title="নিশ্চিত কর"
+          stepLabel="৩/৩ স্টেপ"
+          activeStepCount={3}
+        />
 
         <section className="mt-4 rounded-[20px] border border-white bg-[rgba(255,255,255,0.29)] p-5 shadow-[0_2px_20.6px_rgba(24,34,41,0.04)] backdrop-blur-[20px]">
           <div className="grid gap-5 lg:grid-cols-[1fr_282px]">
-            <div>
-              <h2 className="font-display-bn text-[16px] font-bold leading-[140%] text-[#101828]">
-                প্রশ্ন ধরন
-              </h2>
-              <div className="mt-4 flex rounded-[20px] border border-white bg-white p-1 shadow-[0_2px_20.6px_rgba(24,34,41,0.04)]">
-                <ChoiceButton
-                  active={setup.questionType === 'mcq'}
-                  onClick={() => dispatch(setQuestionType('mcq'))}
-                >
-                  MCQ
-                </ChoiceButton>
-                <ChoiceButton
-                  active={setup.questionType === 'written'}
-                  onClick={() => dispatch(setQuestionType('written'))}
-                >
-                  WRITTEN
-                </ChoiceButton>
-              </div>
-            </div>
+            <QuestionTypeSelector
+              value={setup.questionType}
+              onChange={(value) => dispatch(setQuestionType(value))}
+            />
 
             <div>
               <h2 className="font-display-bn text-[16px] font-bold leading-[140%] text-[#101828]">

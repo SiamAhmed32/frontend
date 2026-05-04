@@ -31,10 +31,9 @@ export function ExamTopicSelectContent() {
   const [expandedIds, setExpandedIds] = useState(['first-vector']);
 
   useEffect(() => {
-    if (setup.subjectId !== subjectId) {
-      dispatch(selectSubject(subjectId));
-    }
-  }, [dispatch, setup.subjectId, subjectId]);
+    // Always reset selection when entering step-1 route.
+    dispatch(selectSubject(subjectId));
+  }, [dispatch, subjectId]);
 
   const subjectTitle = subject?.title ?? 'পদার্থবিজ্ঞান';
   const selectedTopicIds = setup.selectedTopicIds.filter((topicId) => allTopicIds.includes(topicId));
