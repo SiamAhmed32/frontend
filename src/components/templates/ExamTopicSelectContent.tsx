@@ -1,22 +1,21 @@
 'use client';
 
 import { ChevronRight } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/atoms/Button';
 import { StepProgress } from '@/components/atoms/StepProgress';
 import { LabeledNumberField } from '@/components/molecules/LabeledNumberField';
 import { FixedBottomActionBar } from '@/components/organisms/FixedBottomActionBar';
 import { TopicSelectionCard } from '@/components/organisms/TopicSelectionCard';
-import { selectSubject, setQuestionCount, setSelectedTopics } from '@/features/exam/examSlice';
+import { selectSubject, setQuestionCount } from '@/features/exam/examSlice';
 import { selectExamSetup, selectSubjectById } from '@/features/exam/selectors';
 import {
   ALL_PHYSICS_TOPIC_SELECTION_IDS,
   firstPaperTopics,
   secondPaperTopics,
-  type TopicNode,
 } from '@/features/exam/topicTree';
-import { collectTopicIds } from '@/features/exam/topicSelectionUtils';
+import { useTopicSelection } from '@/features/exam/useTopicSelection';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 const allTopicIds = ALL_PHYSICS_TOPIC_SELECTION_IDS;
@@ -28,7 +27,6 @@ export function ExamTopicSelectContent() {
   const dispatch = useAppDispatch();
   const setup = useAppSelector(selectExamSetup);
   const subject = useAppSelector((state) => selectSubjectById(state, subjectId));
-  const [expandedIds, setExpandedIds] = useState(['first-vector']);
 
   useEffect(() => {
     // Always reset selection when entering step-1 route.
@@ -37,41 +35,10 @@ export function ExamTopicSelectContent() {
 
   const subjectTitle = subject?.title ?? 'পদার্থবিজ্ঞান';
   const selectedTopicIds = setup.selectedTopicIds.filter((topicId) => allTopicIds.includes(topicId));
-
-  const setTopics = (topicIds: string[]) => {
-    const nextTopicIds = Array.from(new Set(topicIds.filter((topicId) => allTopicIds.includes(topicId))));
-    dispatch(setSelectedTopics(nextTopicIds));
-  };
-
-  const toggleTopic = (topic: TopicNode) => {
-    const ids = topic.children ? collectTopicIds(topic.children) : [topic.id];
-    const selected = ids.every((topicId) => selectedTopicIds.includes(topicId));
-
-    setTopics(
-      selected
-        ? selectedTopicIds.filter((topicId) => !ids.includes(topicId))
-        : [...selectedTopicIds, ...ids]
-    );
-  };
-
-  const togglePaper = (topics: TopicNode[]) => {
-    const ids = collectTopicIds(topics);
-    const selected = ids.every((topicId) => selectedTopicIds.includes(topicId));
-
-    setTopics(
-      selected
-        ? selectedTopicIds.filter((topicId) => !ids.includes(topicId))
-        : [...selectedTopicIds, ...ids]
-    );
-  };
-
-  const toggleExpand = (topicId: string) => {
-    setExpandedIds((currentIds) =>
-      currentIds.includes(topicId)
-        ? currentIds.filter((currentId) => currentId !== topicId)
-        : [...currentIds, topicId]
-    );
-  };
+  const { expandedIds, toggleTopic, togglePaper, toggleExpand } = useTopicSelection(
+    allTopicIds,
+    selectedTopicIds
+  );
 
   return (
     <main className="relative min-h-screen overflow-hidden px-5 pb-[142px] pt-8 sm:px-8 lg:px-12 lg:pt-[55px]">
