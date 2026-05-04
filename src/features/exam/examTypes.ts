@@ -57,5 +57,6 @@ export interface ExamResult {
   wrong: number;
   unanswered: number;
   score: number;
+  timeTakenSeconds: number;
   submittedAt: string;
 }

@@ -1,13 +1,14 @@
-import { ExamTopicSelectContent } from '@/components/templates/ExamTopicSelectContent';
 import { AuthGuard } from '@/components/templates/AuthGuard';
 import { DashboardLayout } from '@/components/templates/DashboardLayout';
+import { ExamSessionContent } from '@/components/templates/ExamSessionContent';
 
-export default function ExamSetupPage() {
+export default function ExamSessionPage() {
   return (
     <AuthGuard>
       <DashboardLayout>
-        <ExamTopicSelectContent />
+        <ExamSessionContent />
       </DashboardLayout>
     </AuthGuard>
   );
 }
+

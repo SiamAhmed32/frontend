@@ -5,9 +5,11 @@ import type { ExamListCard, ExamResult, ExamSubject } from './examTypes';
 interface ExamSetup {
   subjectId: string | null;
   selectedTopicIds: string[];
+  standard: 'engineering' | 'main-book' | 'varsity' | 'medical';
   questionType: 'mcq' | 'written';
   questionCount: number;
   durationMinutes: number;
+  startedAt: string | null;
 }
 
 interface ExamState {
@@ -24,9 +26,11 @@ const initialState: ExamState = {
   setup: {
     subjectId: null,
     selectedTopicIds: [],
+    standard: 'engineering',
     questionType: 'mcq',
     questionCount: 12,
     durationMinutes: 30,
+    startedAt: null,
   },
   answers: {},
   results: {},
@@ -43,7 +47,13 @@ const examSlice = createSlice({
       state.setup.selectedTopicIds = subject?.topics.map((topic) => topic.id) ?? [];
       state.setup.questionCount = 12;
       state.setup.durationMinutes = subject?.durationMinutes ?? 30;
+      state.setup.startedAt = null;
       state.answers = {};
+    },
+    startExamSession: (state) => {
+      if (!state.setup.startedAt) {
+        state.setup.startedAt = new Date().toISOString();
+      }
     },
     toggleTopic: (state, action: PayloadAction<string>) => {
       const isSelected = state.setup.selectedTopicIds.includes(action.payload);
@@ -54,6 +64,9 @@ const examSlice = createSlice({
     },
     setSelectedTopics: (state, action: PayloadAction<string[]>) => {
       state.setup.selectedTopicIds = action.payload;
+    },
+    setExamStandard: (state, action: PayloadAction<ExamSetup['standard']>) => {
+      state.setup.standard = action.payload;
     },
     setQuestionType: (state, action: PayloadAction<ExamSetup['questionType']>) => {
       state.setup.questionType = action.payload;
@@ -85,6 +98,14 @@ const examSlice = createSlice({
       const totalQuestions = subject.questions.length;
       const unanswered = totalQuestions - answered;
       const wrong = answered - correct;
+      const submittedAt = new Date().toISOString();
+      const startedAt = state.setup.startedAt ? new Date(state.setup.startedAt).getTime() : null;
+      const submittedAtTime = new Date(submittedAt).getTime();
+      const fallbackSeconds = (state.setup.durationMinutes || subject.durationMinutes || 30) * 60;
+      const timeTakenSeconds =
+        startedAt && submittedAtTime > startedAt
+          ? Math.max(1, Math.round((submittedAtTime - startedAt) / 1000))
+          : fallbackSeconds;
 
       state.results[subject.id] = {
         subjectId: subject.id,
@@ -93,11 +114,13 @@ const examSlice = createSlice({
         wrong,
         unanswered,
         score: correct,
-        submittedAt: new Date().toISOString(),
+        timeTakenSeconds,
+        submittedAt,
       };
     },
     resetExamSession: (state) => {
       state.answers = {};
+      state.setup.startedAt = null;
     },
   },
 });
@@ -105,7 +128,9 @@ const examSlice = createSlice({
 export const {
   answerQuestion,
   resetExamSession,
+  setExamStandard,
   selectSubject,
+  startExamSession,
   setQuestionCount,
   setDurationMinutes,
   setSelectedTopics,

@@ -29,7 +29,7 @@ export const Button = ({
   return (
     <button
       className={cn(
-        'disabled:opacity-50 disabled:pointer-events-none',
+        'inline-flex items-center justify-center gap-2 whitespace-nowrap disabled:pointer-events-none disabled:opacity-50',
         variants[variant],
         sizes[size],
         className

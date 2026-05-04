@@ -7,15 +7,15 @@ export const examSubjects: ExamSubject[] = [
     iconLabel: 'ক',
     durationMinutes: 30,
     topics: [
-      { id: 'measurement', title: 'ভৌতজগত ও পরিমাপ' },
+      { id: 'measurement', title: 'ভৌতজগৎ ও পরিমাপ' },
       { id: 'vector', title: 'ভেক্টর' },
-      { id: 'motion', title: 'গতি বিদ্যা' },
+      { id: 'motion', title: 'গতিবিদ্যা' },
       { id: 'newtonian', title: 'নিউটনিয়ান বলবিদ্যা' },
     ],
     questions: [
       {
         id: 'physics-1',
-        text: 'একটি রেফ্রিজারেটরের কার্যকারিতা সহগ 4.61 ঠান্ডা প্রকোষ্ঠে 250 J অপসারণ করলে প্রতিবেশে কৃত কাজের পরিমাণ কত?',
+        text: 'একটি রেফ্রিজারেটরের কার্যগুণক 4.61। ঠান্ডা প্রকোষ্ঠে 250 J অপসারণ করলে প্রতিবেশে কৃত কাজের পরিমাণ কত?',
         correctOptionId: 'physics-1-b',
         options: [
           { id: 'physics-1-a', label: '46 J' },
@@ -33,6 +33,61 @@ export const examSubjects: ExamSubject[] = [
           { id: 'physics-2-b', label: 'বিকিরণ' },
           { id: 'physics-2-c', label: 'তাপমাত্রা' },
           { id: 'physics-2-d', label: 'চাপ' },
+        ],
+      },
+      {
+        id: 'physics-3',
+        text: 'কোনটির তাপন ক্ষমতা সবচেয়ে বেশি?',
+        correctOptionId: 'physics-3-c',
+        options: [
+          { id: 'physics-3-a', label: 'পিট' },
+          { id: 'physics-3-b', label: 'লিগনাইট' },
+          { id: 'physics-3-c', label: 'অ্যানথ্রাসাইট' },
+          { id: 'physics-3-d', label: 'বিটুমিনাস' },
+        ],
+      },
+      {
+        id: 'physics-4',
+        text: 'একটি কার্নো ইঞ্জিন 1200 K ও 600 K তাপমাত্রায় যে দক্ষতায় কাজ করে, 100 K ও T K তাপমাত্রায় কাজ করলেও একই দক্ষতা প্রদর্শন করে। T এর মান কত?',
+        correctOptionId: 'physics-4-c',
+        options: [
+          { id: 'physics-4-a', label: '80 K' },
+          { id: 'physics-4-b', label: '70 K' },
+          { id: 'physics-4-c', label: '50 K' },
+          { id: 'physics-4-d', label: '60 K' },
+        ],
+      },
+      {
+        id: 'physics-5',
+        text: 'নিচের কোন গ্যাসের জন্য রুদ্ধতাপীয় প্রক্রিয়ায় চাপ বেশি বাড়ে?',
+        correctOptionId: 'physics-5-d',
+        options: [
+          { id: 'physics-5-a', label: 'হাইড্রোজেন' },
+          { id: 'physics-5-b', label: 'অক্সিজেন' },
+          { id: 'physics-5-c', label: 'নাইট্রোজেন' },
+          { id: 'physics-5-d', label: 'হিলিয়াম' },
+        ],
+      },
+      {
+        id: 'physics-6',
+        text: '০°C তাপমাত্রা কেলভিন স্কেলে কত?',
+        correctOptionId: 'physics-6-b',
+        options: [
+          { id: 'physics-6-a', label: '০ K' },
+          { id: 'physics-6-b', label: '২৭৩.১৫ K' },
+          { id: 'physics-6-c', label: '২৭৩ K' },
+          { id: 'physics-6-d', label: '২৯৮.১৫ K' },
+        ],
+      },
+      {
+        id: 'physics-7',
+        text: 'একটি রোধ R এ কারেন্ট I প্রবাহিত হলে জুলের তাপ উৎপাদনের হার (শক্তি) কত?',
+        correctOptionId: 'physics-7-b',
+        options: [
+          { id: 'physics-7-a', label: 'I/R' },
+          { id: 'physics-7-b', label: 'I²R' },
+          { id: 'physics-7-c', label: 'IR²' },
+          { id: 'physics-7-d', label: 'IR' },
         ],
       },
     ],
@@ -89,7 +144,7 @@ export const examSubjects: ExamSubject[] = [
     questions: [
       {
         id: 'bio-1',
-        text: 'কোষের শক্তি কারখানা কোনটি?',
+        text: 'কোষের শক্তির কারখানা কোনটি?',
         correctOptionId: 'bio-1-b',
         options: [
           { id: 'bio-1-a', label: 'নিউক্লিয়াস' },
@@ -115,7 +170,7 @@ export const examListCards: ExamListCard[] = [
   {
     id: 'list-2',
     subjectId: 'chemistry',
-    title: 'পদার্থবিজ্ঞান',
+    title: 'রসায়ন',
     iconBg: '#DCFCE7',
     iconFg: '#166534',
     tilePreset: 'latin-a',
@@ -124,7 +179,7 @@ export const examListCards: ExamListCard[] = [
   {
     id: 'list-3',
     subjectId: 'higher-math',
-    title: 'পদার্থবিজ্ঞান',
+    title: 'উচ্চতর গণিত',
     iconBg: '#FCE7F3',
     iconFg: '#BE123C',
     tilePreset: 'calculator',
@@ -133,7 +188,7 @@ export const examListCards: ExamListCard[] = [
   {
     id: 'list-4',
     subjectId: 'biology',
-    title: 'পদার্থবিজ্ঞান',
+    title: 'জীববিজ্ঞান',
     iconBg: '#DBEAFE',
     iconFg: '#1D4ED8',
     tilePreset: 'geometry',
@@ -151,7 +206,7 @@ export const examListCards: ExamListCard[] = [
   {
     id: 'list-6',
     subjectId: 'chemistry',
-    title: 'পদার্থবিজ্ঞান',
+    title: 'রসায়ন',
     iconBg: '#FFEDD5',
     iconFg: '#EA580C',
     tilePreset: 'flask',
@@ -160,7 +215,7 @@ export const examListCards: ExamListCard[] = [
   {
     id: 'list-7',
     subjectId: 'higher-math',
-    title: 'পদার্থবিজ্ঞান',
+    title: 'উচ্চতর গণিত',
     iconBg: '#D1FAE5',
     iconFg: '#059669',
     tilePreset: 'dna',
@@ -169,7 +224,7 @@ export const examListCards: ExamListCard[] = [
   {
     id: 'list-8',
     subjectId: 'biology',
-    title: 'পদার্থবিজ্ঞান',
+    title: 'জীববিজ্ঞান',
     iconBg: '#FEE4E4',
     iconFg: '#DC2626',
     tilePreset: 'chip',
