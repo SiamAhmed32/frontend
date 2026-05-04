@@ -20,7 +20,7 @@ const rootReducer = combineReducers({
 
 const persistedReducer = persistReducer(
   {
-    key: 'panjeri-exam',
+    key: 'panjeri-edu-v7',
     storage,
     whitelist: ['auth', 'exam'],
   },

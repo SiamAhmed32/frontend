@@ -1,6 +1,7 @@
 import type { RootState } from '@/store/store';
 
 export const selectExamSubjects = (state: RootState) => state.exam.subjects;
+export const selectExamListCards = (state: RootState) => state.exam.listCards;
 export const selectExamSetup = (state: RootState) => state.exam.setup;
 export const selectExamAnswers = (state: RootState) => state.exam.answers;
 export const selectExamResults = (state: RootState) => state.exam.results;

@@ -51,9 +51,10 @@ export function RegisterForm({ error, values, onChange, onSubmit }: RegisterForm
           <Input
             id="name"
             name="name"
+            autoComplete="name"
             variant="auth"
             value={values.name}
-            placeholder="Type Your Name"
+            placeholder="Enter your name"
             onChange={(event) => onChange('name', event.target.value)}
             required
           />
@@ -62,8 +63,11 @@ export function RegisterForm({ error, values, onChange, onSubmit }: RegisterForm
           <Input
             id="phone"
             name="phone"
+            type="tel"
+            autoComplete="tel"
             variant="auth"
             value={values.phone}
+            placeholder="+880"
             onChange={(event) => onChange('phone', event.target.value)}
             required
           />
@@ -110,6 +114,7 @@ export function RegisterForm({ error, values, onChange, onSubmit }: RegisterForm
             name="password"
             placeholder="Password"
             type="password"
+            autoComplete="new-password"
             variant="auth"
             value={values.password}
             onChange={(event) => onChange('password', event.target.value)}
@@ -122,6 +127,7 @@ export function RegisterForm({ error, values, onChange, onSubmit }: RegisterForm
             name="confirmPassword"
             placeholder="Confirm Password"
             type="password"
+            autoComplete="new-password"
             variant="auth"
             value={values.confirmPassword}
             onChange={(event) => onChange('confirmPassword', event.target.value)}

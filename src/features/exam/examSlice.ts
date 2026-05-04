@@ -1,16 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { examSubjects } from './examData';
-import type { ExamResult, ExamSubject } from './examTypes';
+import { examListCards, examSubjects } from './examData';
+import type { ExamListCard, ExamResult, ExamSubject } from './examTypes';
 
 interface ExamSetup {
   subjectId: string | null;
   selectedTopicIds: string[];
   questionType: 'mcq' | 'written';
+  questionCount: number;
   durationMinutes: number;
 }
 
 interface ExamState {
   subjects: ExamSubject[];
+  listCards: ExamListCard[];
   setup: ExamSetup;
   answers: Record<string, string>;
   results: Record<string, ExamResult>;
@@ -18,10 +20,12 @@ interface ExamState {
 
 const initialState: ExamState = {
   subjects: examSubjects,
+  listCards: examListCards,
   setup: {
     subjectId: null,
     selectedTopicIds: [],
     questionType: 'mcq',
+    questionCount: 12,
     durationMinutes: 30,
   },
   answers: {},
@@ -37,6 +41,7 @@ const examSlice = createSlice({
 
       state.setup.subjectId = action.payload;
       state.setup.selectedTopicIds = subject?.topics.map((topic) => topic.id) ?? [];
+      state.setup.questionCount = 12;
       state.setup.durationMinutes = subject?.durationMinutes ?? 30;
       state.answers = {};
     },
@@ -47,8 +52,15 @@ const examSlice = createSlice({
         ? state.setup.selectedTopicIds.filter((topicId) => topicId !== action.payload)
         : [...state.setup.selectedTopicIds, action.payload];
     },
+    setSelectedTopics: (state, action: PayloadAction<string[]>) => {
+      state.setup.selectedTopicIds = action.payload;
+    },
     setQuestionType: (state, action: PayloadAction<ExamSetup['questionType']>) => {
       state.setup.questionType = action.payload;
+    },
+    setQuestionCount: (state, action: PayloadAction<number>) => {
+      const nextCount = Number.isFinite(action.payload) ? Math.floor(action.payload) : 12;
+      state.setup.questionCount = Math.min(Math.max(nextCount, 1), 100);
     },
     setDurationMinutes: (state, action: PayloadAction<number>) => {
       state.setup.durationMinutes = action.payload;
@@ -94,7 +106,9 @@ export const {
   answerQuestion,
   resetExamSession,
   selectSubject,
+  setQuestionCount,
   setDurationMinutes,
+  setSelectedTopics,
   setQuestionType,
   submitExam,
   toggleTopic,
