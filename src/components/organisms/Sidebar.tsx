@@ -105,14 +105,17 @@ export function Sidebar({ className, onNavigate }: SidebarProps) {
   return (
     <aside
       className={cn(
-        'flex h-full min-h-screen w-[283px] flex-col justify-between border-r border-white/70 bg-[#F6F6F6] px-2 pb-2 pt-5 shadow-[0_2px_20.6px_0_rgba(24,34,41,0.04)]',
+        'flex h-screen min-h-0 w-[283px] flex-col border-r border-white/70 bg-[#F6F6F6] px-2 pb-2 pt-5 shadow-[0_2px_20.6px_0_rgba(24,34,41,0.04)]',
         className
       )}
     >
-      <div className="flex w-full flex-col">
+      <div className="flex min-h-0 flex-1 flex-col">
         <PanjeriBrand variant="sidebar" className="px-6 pb-4" />
 
-        <nav className="flex w-full flex-col gap-3 px-3 py-4" aria-label="প্রধান মেনু">
+        <nav
+          className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-3 py-4"
+          aria-label="প্রধান মেনু"
+        >
           {NAV_ITEMS.map((item) => (
             <SidebarItem
               key={`${item.href}-${item.label}`}
@@ -126,7 +129,7 @@ export function Sidebar({ className, onNavigate }: SidebarProps) {
         </nav>
       </div>
 
-      <div className="w-full border-t border-white px-6 py-4">
+      <div className="w-full shrink-0 border-t border-white px-6 py-3">
         <div className="flex items-center gap-3">
           <Image
             src="/Avatar.png"
@@ -151,7 +154,7 @@ export function Sidebar({ className, onNavigate }: SidebarProps) {
 
         <button
           type="button"
-          className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-[#D0D5DD] bg-white px-3 py-2 font-['Inter',sans-serif] text-sm font-medium text-[#344054] transition hover:bg-[#F9FAFB] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7F56D9] focus-visible:ring-offset-2"
+          className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg border border-[#D0D5DD] bg-white px-3 py-2 font-['Inter',sans-serif] text-sm font-medium text-[#344054] transition hover:bg-[#F9FAFB] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7F56D9] focus-visible:ring-offset-2"
           onClick={() => {
             dispatch(logoutUser());
             onNavigate?.();
