@@ -1,13 +1,13 @@
 'use client';
 
-import { ChevronDown, ChevronRight } from 'lucide-react';
-import type { CSSProperties } from 'react';
-import { useEffect, useMemo, useState } from 'react';
+import { ChevronRight } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/atoms/Button';
-import { CheckToggle } from '@/components/atoms/CheckToggle';
+import { StepProgress } from '@/components/atoms/StepProgress';
 import { LabeledNumberField } from '@/components/molecules/LabeledNumberField';
 import { FixedBottomActionBar } from '@/components/organisms/FixedBottomActionBar';
+import { TopicSelectionCard } from '@/components/organisms/TopicSelectionCard';
 import { selectSubject, setQuestionCount, setSelectedTopics } from '@/features/exam/examSlice';
 import { selectExamSetup, selectSubjectById } from '@/features/exam/selectors';
 import {
@@ -16,154 +16,10 @@ import {
   secondPaperTopics,
   type TopicNode,
 } from '@/features/exam/topicTree';
-import { cn } from '@/lib/utils';
+import { collectTopicIds } from '@/features/exam/topicSelectionUtils';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
-const cardSurface = {
-  background:
-    'linear-gradient(rgba(255, 255, 255, 0.29), rgba(255, 255, 255, 0.29)) padding-box, linear-gradient(5.34deg, #FFFFFF 17.54%, rgba(255, 255, 255, 0.3) 45.99%, #FFFFFF 80.02%) border-box',
-  border: '1.03px solid transparent',
-  backdropFilter: 'blur(20px)',
-} satisfies CSSProperties;
-
-const collectTopicIds = (topics: TopicNode[]): string[] =>
-  topics.flatMap((topic) => [
-    topic.id,
-    ...(topic.children ? collectTopicIds(topic.children) : []),
-  ]);
-
 const allTopicIds = ALL_PHYSICS_TOPIC_SELECTION_IDS;
-
-function StepProgress() {
-  return (
-    <div className="mt-[13px] grid h-[5px] grid-cols-3 gap-5">
-      <span className="h-[5px] rounded-[200px] bg-[#7F56D9]" />
-      <span className="h-[5px] rounded-[200px] bg-white/90" />
-      <span className="h-[5px] rounded-[200px] bg-white/90" />
-    </div>
-  );
-}
-
-function TopicRow({
-  depth = 0,
-  expandedIds,
-  onToggleExpand,
-  onToggleTopic,
-  selectedTopicIds,
-  topic,
-}: {
-  depth?: number;
-  expandedIds: string[];
-  onToggleExpand: (topicId: string) => void;
-  onToggleTopic: (topic: TopicNode) => void;
-  selectedTopicIds: string[];
-  topic: TopicNode;
-}) {
-  const childIds = topic.children ? collectTopicIds(topic.children) : [];
-  const hasChildren = childIds.length > 0;
-  const checked = hasChildren
-    ? childIds.every((topicId) => selectedTopicIds.includes(topicId))
-    : selectedTopicIds.includes(topic.id);
-  const expanded = hasChildren ? expandedIds.includes(topic.id) : false;
-
-  return (
-    <div>
-      <div className="flex min-h-[43px] w-full items-center justify-between gap-3 border-b border-[#EAECF0]/70 px-4">
-        <button
-          type="button"
-          className="flex min-w-0 flex-1 items-center gap-2 py-2 text-left font-display-bn text-[14px] font-semibold leading-[140%] text-[#101828] outline-none focus-visible:ring-2 focus-visible:ring-[#7F56D9] focus-visible:ring-offset-2"
-          style={{ paddingLeft: depth ? 24 : 0 }}
-          onClick={() => (hasChildren ? onToggleExpand(topic.id) : onToggleTopic(topic))}
-          aria-expanded={hasChildren ? expanded : undefined}
-        >
-          {hasChildren ? (
-            expanded ? (
-              <ChevronDown className="size-4 shrink-0 text-[#242424]" />
-            ) : (
-              <ChevronRight className="size-4 shrink-0 text-[#242424]" />
-            )
-          ) : (
-            <ChevronDown className="size-4 shrink-0 text-[#242424]" />
-          )}
-          <span className="min-w-0 truncate">{topic.label}</span>
-        </button>
-        <span aria-hidden="true">
-          <CheckToggle checked={checked} onClick={() => onToggleTopic(topic)} />
-        </span>
-      </div>
-      {expanded
-        ? topic.children?.map((child) => (
-            <TopicRow
-              key={child.id}
-              depth={depth + 1}
-              expandedIds={expandedIds}
-              onToggleExpand={onToggleExpand}
-              onToggleTopic={onToggleTopic}
-              selectedTopicIds={selectedTopicIds}
-              topic={child}
-            />
-          ))
-        : null}
-    </div>
-  );
-}
-
-function TopicCard({
-  className,
-  expandedIds,
-  onToggleExpand,
-  onTogglePaper,
-  onToggleTopic,
-  selectedTopicIds,
-  title,
-  topics,
-}: {
-  className?: string;
-  expandedIds: string[];
-  onToggleExpand: (topicId: string) => void;
-  onTogglePaper: (topics: TopicNode[]) => void;
-  onToggleTopic: (topic: TopicNode) => void;
-  selectedTopicIds: string[];
-  title: string;
-  topics: TopicNode[];
-}) {
-  const paperTopicIds = useMemo(() => collectTopicIds(topics), [topics]);
-  const checked = paperTopicIds.every((topicId) => selectedTopicIds.includes(topicId));
-
-  return (
-    <section
-      className={cn(
-        'w-full rounded-[20px] px-0 pb-5 pt-5 shadow-[0_2px_20.6px_rgba(24,34,41,0.04)]',
-        className
-      )}
-      style={cardSurface}
-    >
-      <div className="flex h-[25px] items-center justify-between px-4">
-        <div className="flex min-w-0 items-center gap-2">
-          <ChevronDown className="size-4 shrink-0 text-[#242424]" aria-hidden="true" />
-          <h2 className="truncate font-display-bn text-[16px] font-bold leading-[140%] text-[#101828]">
-            {title}
-          </h2>
-        </div>
-        <span aria-hidden="true">
-          <CheckToggle checked={checked} onClick={() => onTogglePaper(topics)} />
-        </span>
-      </div>
-      <div className="mt-[18px]">
-        {topics.map((topic) => (
-          <TopicRow
-            key={topic.id}
-            expandedIds={expandedIds}
-            onToggleExpand={onToggleExpand}
-            onToggleTopic={onToggleTopic}
-            selectedTopicIds={selectedTopicIds}
-            topic={topic}
-          />
-        ))}
-      </div>
-    </section>
-  );
-}
 
 export function ExamTopicSelectContent() {
   const params = useParams<{ id?: string }>();
@@ -240,11 +96,11 @@ export function ExamTopicSelectContent() {
               ১/৩ স্টেপ
             </span>
           </div>
-          <StepProgress />
+          <StepProgress activeCount={1} />
         </section>
 
         <div className="mt-4 grid gap-6 xl:grid-cols-2 xl:px-10 xl:py-5">
-          <TopicCard
+          <TopicSelectionCard
             title="১ম পত্র"
             topics={firstPaperTopics}
             selectedTopicIds={selectedTopicIds}
@@ -254,7 +110,7 @@ export function ExamTopicSelectContent() {
             onToggleTopic={toggleTopic}
             className="xl:min-h-[861px]"
           />
-          <TopicCard
+          <TopicSelectionCard
             title="২য় পত্র"
             topics={secondPaperTopics}
             selectedTopicIds={selectedTopicIds}
