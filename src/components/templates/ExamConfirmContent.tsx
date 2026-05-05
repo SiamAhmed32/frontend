@@ -40,7 +40,7 @@ export function ExamConfirmContent() {
 
   return (
     <main className="relative min-h-screen overflow-hidden px-5 pb-[128px] pt-8 sm:px-8 lg:px-12 lg:pt-[55px]">
-      <div className="relative mx-auto w-full max-w-[891px] lg:mx-0">
+      <div className="relative mx-auto w-full max-w-[891px]">
         <ExamStepHeader
           sectionLabel="মক টেস্ট"
           subjectTitle={subjectTitle}

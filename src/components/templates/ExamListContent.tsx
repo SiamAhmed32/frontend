@@ -12,7 +12,7 @@ export function ExamListContent() {
 
   return (
     <main className="min-h-screen w-full overflow-y-auto px-5 pb-12 pt-14 sm:px-8 lg:px-10 xl:px-[54px]">
-      <div className="mx-auto w-full max-w-[885px] lg:mx-0">
+      <div className="mx-auto w-full max-w-[885px]">
         <ExamListHeader />
 
         <div className="mt-4 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-3 lg:gap-y-4">

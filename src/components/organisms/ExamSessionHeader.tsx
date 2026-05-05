@@ -25,15 +25,10 @@ export function ExamSessionHeader({
     <header>
       <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
         <div className="min-w-0">
-          <h1 className="font-display-bn text-[20px] font-bold leading-[140%] text-[#101828]">
-            মক পরীক্ষা ({subjectTitle})
-          </h1>
+          <h1 className="font-display-bn text-[20px] font-bold leading-[140%] text-[#101828]">মক পরীক্ষা ({subjectTitle})</h1>
           <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-3">
             <ExamMetaPill icon={<FileText className="size-4" strokeWidth={2} />} label="কুইজ" />
-            <ExamMetaPill
-              icon={<BookCopy className="size-4" strokeWidth={2} />}
-              label={`${toBengaliDigits(questionCount)} টি প্রশ্ন`}
-            />
+            <ExamMetaPill icon={<BookCopy className="size-4" strokeWidth={2} />} label={`${toBengaliDigits(questionCount)} টি প্রশ্ন`} />
             <ExamMetaPill icon={<Clock3 className="size-4" strokeWidth={2} />} label={timeLabel} />
           </div>
         </div>
@@ -51,4 +46,3 @@ export function ExamSessionHeader({
     </header>
   );
 }
-

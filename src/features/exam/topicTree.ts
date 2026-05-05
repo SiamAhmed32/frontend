@@ -39,12 +39,23 @@ export const secondPaperTopics: TopicNode[] = [
 ];
 
 const collectTopicIds = (topics: TopicNode[]): string[] =>
-  topics.flatMap((topic) => [
-    topic.id,
-    ...(topic.children ? collectTopicIds(topic.children) : []),
-  ]);
+  topics.flatMap((topic) => (topic.children ? collectTopicIds(topic.children) : [topic.id]));
 
 export const ALL_PHYSICS_TOPIC_SELECTION_IDS = collectTopicIds([...firstPaperTopics, ...secondPaperTopics]);
+
+export function getTopicTreeForSubject(subjectId: string): TopicNode[][] {
+  if (subjectId === 'physics') {
+    return [firstPaperTopics, secondPaperTopics];
+  }
+
+  const subject = examSubjects.find((s) => s.id === subjectId);
+  const subjectTopics = subject?.topics.map((topic) => ({
+    id: topic.id,
+    label: topic.title,
+  }));
+
+  return subjectTopics?.length ? [subjectTopics] : [[]];
+}
 
 export function getDefaultTopicSelectionForSubject(subjectId: string): string[] {
   if (subjectId === 'physics') {

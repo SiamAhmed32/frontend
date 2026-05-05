@@ -1,96 +1,15 @@
 'use client';
 
 import Image from 'next/image';
-import {
-  Bell,
-  Bot,
-  CalendarDays,
-  FileQuestion,
-  LayoutDashboard,
-  LibraryBig,
-  LogOut,
-  NotebookTabs,
-  Send,
-  Trash2,
-} from 'lucide-react';
-import type { ReactNode } from 'react';
+import { LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { PanjeriBrand } from '@/components/molecules/PanjeriBrand';
 import { SidebarItem } from '@/components/molecules/SidebarItem';
+import { NAV_ITEMS } from '@/components/organisms/sidebarNavItems';
 import { logoutUser } from '@/features/auth/authSlice';
 import { selectCurrentUser } from '@/features/auth/selectors';
 import { cn } from '@/lib/utils';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-
-interface NavItemConfig {
-  href: string;
-  label: string;
-  icon: ReactNode;
-  isActive: (pathname: string) => boolean;
-}
-
-const NAV_ITEMS: NavItemConfig[] = [
-  {
-    href: '/dashboard',
-    label: 'ড্যাশবোর্ড',
-    icon: <LayoutDashboard className="size-4" />,
-    isActive: (pathname) => pathname === '/dashboard',
-  },
-  {
-    href: '/coming-soon/preparation',
-    label: 'প্রস্তুতি নাও',
-    icon: <NotebookTabs className="size-4" />,
-    isActive: (pathname) => pathname === '/coming-soon/preparation',
-  },
-  {
-    href: '/dashboard',
-    label: 'পরীক্ষা দাও',
-    icon: <Send className="size-4" />,
-    isActive: (pathname) => pathname.startsWith('/exams'),
-  },
-  {
-    href: '/coming-soon/question-bank',
-    label: 'প্রশ্ন ব্যাংক',
-    icon: <FileQuestion className="size-4" />,
-    isActive: (pathname) => pathname === '/coming-soon/question-bank',
-  },
-  {
-    href: '/coming-soon/ai-doubt',
-    label: 'AI ডাউট সলভ',
-    icon: <Bot className="size-4" />,
-    isActive: (pathname) => pathname === '/coming-soon/ai-doubt',
-  },
-  {
-    href: '/coming-soon/routine',
-    label: 'রুটিন',
-    icon: <CalendarDays className="size-4" />,
-    isActive: (pathname) => pathname === '/coming-soon/routine',
-  },
-  {
-    href: '/coming-soon/review',
-    label: 'রিভিউ',
-    icon: <NotebookTabs className="size-4" />,
-    isActive: (pathname) => pathname === '/coming-soon/review',
-  },
-  {
-    href: '/coming-soon/library',
-    label: 'ই-লাইব্রেরী',
-    icon: <LibraryBig className="size-4" />,
-    isActive: (pathname) => pathname === '/coming-soon/library',
-  },
-  {
-    href: '/coming-soon/notice',
-    label: 'নোটিশ বোর্ড',
-    icon: <Bell className="size-4" />,
-    isActive: (pathname) => pathname === '/coming-soon/notice',
-  },
-  {
-    href: '/coming-soon/doubts',
-    label: 'সন্দেহ',
-    icon: <Trash2 className="size-4" />,
-    isActive: (pathname) => pathname === '/coming-soon/doubts',
-  },
-];
 
 interface SidebarProps {
   className?: string;
@@ -112,10 +31,7 @@ export function Sidebar({ className, onNavigate }: SidebarProps) {
       <div className="flex min-h-0 flex-1 flex-col">
         <PanjeriBrand variant="sidebar" className="px-6 pb-4" />
 
-        <nav
-          className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-3 py-4"
-          aria-label="প্রধান মেনু"
-        >
+        <nav className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-3 py-4" aria-label="প্রধান মেনু">
           {NAV_ITEMS.map((item) => (
             <SidebarItem
               key={`${item.href}-${item.label}`}
@@ -131,24 +47,12 @@ export function Sidebar({ className, onNavigate }: SidebarProps) {
 
       <div className="w-full shrink-0 border-t border-white px-6 py-3">
         <div className="flex items-center gap-3">
-          <Image
-            src="/Avatar.png"
-            alt=""
-            width={30}
-            height={30}
-            className="h-[30px] w-[30px] shrink-0 rounded-full object-cover"
-            aria-hidden
-          />
+          <Image src="/Avatar.png" alt="" width={30} height={30} className="h-[30px] w-[30px] shrink-0 rounded-full object-cover" aria-hidden />
           <div className="min-w-0">
-            <p
-              className="truncate font-['Inter',sans-serif] text-sm font-medium leading-5 tracking-[0] text-[#344054]"
-              title={user?.name ?? 'Muhidul Hasan'}
-            >
+            <p className="truncate font-['Inter',sans-serif] text-sm font-medium leading-5 tracking-[0] text-[#344054]" title={user?.name ?? 'Muhidul Hasan'}>
               {user?.name ?? 'Muhidul Hasan'}
             </p>
-            <p className="font-['Inter',sans-serif] text-sm font-normal leading-5 tracking-[0] text-[#475467]">
-              Student
-            </p>
+            <p className="font-['Inter',sans-serif] text-sm font-normal leading-5 tracking-[0] text-[#475467]">Student</p>
           </div>
         </div>
 
