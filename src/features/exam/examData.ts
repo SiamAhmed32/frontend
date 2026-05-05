@@ -207,3 +207,5 @@ export const examListCards: ExamListCard[] = [
   { id: 'list-7', subjectId: 'ict', title: 'ICT', iconBg: '#D1FAE5', iconFg: '#059669', tilePreset: 'dna', emojiFile: 'fi_620401.png' },
   { id: 'list-8', subjectId: 'general-knowledge', title: 'সাধারণ জ্ঞান', iconBg: '#FEE4E4', iconFg: '#DC2626', tilePreset: 'chip', emojiFile: 'Vector (1).png' },
 ];
+
+//
