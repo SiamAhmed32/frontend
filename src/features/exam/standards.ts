@@ -6,4 +6,3 @@ export const standardOptions: Array<{ id: StandardId; label: string }> = [
   { id: 'varsity', label: 'ভার্সিটি' },
   { id: 'medical', label: 'মেডিকেল' },
 ];
-

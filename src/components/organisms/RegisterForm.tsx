@@ -1,8 +1,9 @@
 import { FormEvent } from 'react';
 import { Button } from '@/components/atoms/Button';
-import { Input } from '@/components/atoms/Input';
 import { Select } from '@/components/atoms/Select';
+import { AuthTextField } from '@/components/molecules/AuthTextField';
 import { FormField } from '@/components/molecules/FormField';
+import { batchOptions, groupOptions, levelOptions, versionOptions } from '@/components/organisms/registerOptions';
 
 export interface RegisterFormValues {
   name: string;
@@ -14,7 +15,6 @@ export interface RegisterFormValues {
   password: string;
   confirmPassword: string;
 }
-
 interface RegisterFormProps {
   error?: string | null;
   values: RegisterFormValues;
@@ -22,56 +22,12 @@ interface RegisterFormProps {
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
-const levelOptions = [
-  { label: 'HSC', value: 'HSC' },
-  { label: 'SSC', value: 'SSC' },
-];
-
-const batchOptions = [
-  { label: '2025', value: '2025' },
-  { label: '2026', value: '2026' },
-];
-
-const groupOptions = [
-  { label: 'Science', value: 'Science' },
-  { label: 'Commerce', value: 'Commerce' },
-  { label: 'Arts', value: 'Arts' },
-];
-
-const versionOptions = [
-  { label: 'English', value: 'English' },
-  { label: 'Bangla', value: 'Bangla' },
-];
-
 export function RegisterForm({ error, values, onChange, onSubmit }: RegisterFormProps) {
   return (
     <form className="flex w-full flex-col gap-5" onSubmit={onSubmit}>
       <div className="flex w-full flex-col gap-5">
-        <FormField className="h-[70px]" htmlFor="name" label="Name">
-          <Input
-            id="name"
-            name="name"
-            autoComplete="name"
-            variant="auth"
-            value={values.name}
-            placeholder="Enter your name"
-            onChange={(event) => onChange('name', event.target.value)}
-            required
-          />
-        </FormField>
-        <FormField className="h-[70px]" htmlFor="phone" label="Phone">
-          <Input
-            id="phone"
-            name="phone"
-            type="tel"
-            autoComplete="tel"
-            variant="auth"
-            value={values.phone}
-            placeholder="+880"
-            onChange={(event) => onChange('phone', event.target.value)}
-            required
-          />
-        </FormField>
+        <AuthTextField id="name" name="name" label="Name" autoComplete="name" value={values.name} placeholder="Enter your name" onChange={(value) => onChange('name', value)} />
+        <AuthTextField id="phone" name="phone" label="Phone" type="tel" autoComplete="tel" value={values.phone} placeholder="+880" onChange={(value) => onChange('phone', value)} />
         <FormField className="h-[70px]" htmlFor="level" label="Level">
           <Select
             id="level"
@@ -108,32 +64,8 @@ export function RegisterForm({ error, values, onChange, onSubmit }: RegisterForm
             onChange={(event) => onChange('version', event.target.value)}
           />
         </FormField>
-        <FormField className="h-[70px]" htmlFor="password" label="Password">
-          <Input
-            id="password"
-            name="password"
-            placeholder="Password"
-            type="password"
-            autoComplete="new-password"
-            variant="auth"
-            value={values.password}
-            onChange={(event) => onChange('password', event.target.value)}
-            required
-          />
-        </FormField>
-        <FormField className="h-[70px]" htmlFor="confirm-password" label="Confirm Password">
-          <Input
-            id="confirm-password"
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            type="password"
-            autoComplete="new-password"
-            variant="auth"
-            value={values.confirmPassword}
-            onChange={(event) => onChange('confirmPassword', event.target.value)}
-            required
-          />
-        </FormField>
+        <AuthTextField id="password" name="password" label="Password" type="password" autoComplete="new-password" value={values.password} placeholder="Password" onChange={(value) => onChange('password', value)} />
+        <AuthTextField id="confirm-password" name="confirmPassword" label="Confirm Password" type="password" autoComplete="new-password" value={values.confirmPassword} placeholder="Confirm Password" onChange={(value) => onChange('confirmPassword', value)} />
       </div>
       {error && <p className="text-[14px] leading-5 tracking-[0] text-[#BA6262]">{error}</p>}
       <Button size="full" type="submit">

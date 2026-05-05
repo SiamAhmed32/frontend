@@ -10,7 +10,7 @@ interface ComingSoonContentProps {
 export function ComingSoonContent({ featureLabel }: ComingSoonContentProps) {
   return (
     <main className="min-h-screen w-full overflow-y-auto px-5 pb-12 pt-14 sm:px-8 lg:px-10 xl:px-[54px]">
-      <div className="mx-auto flex min-h-[min(520px,70vh)] w-full max-w-[640px] flex-col items-center justify-center text-center lg:mx-0">
+      <div className="mx-auto flex min-h-[min(520px,70vh)] w-full max-w-[640px] flex-col items-center justify-center text-center">
         <div className="flex size-16 items-center justify-center rounded-2xl bg-[linear-gradient(95.7deg,rgba(53,57,221,0.12)_13.77%,rgba(144,17,199,0.12)_56.93%)] text-[#7311A0]">
           <Sparkles className="size-8" strokeWidth={1.75} aria-hidden />
         </div>

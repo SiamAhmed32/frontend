@@ -1,3 +1,5 @@
+import type { StandardId } from './standards';
+
 export interface ExamOption {
   id: string;
   label: string;
@@ -10,6 +12,8 @@ export interface ExamQuestion {
   correctOptionId: string;
   /** Topic chips from `/exams/[id]/setup`; empty/absent = applies to whole subject when filtering */
   topicSelectionIds?: string[];
+  /** Empty/absent = applies to every standard. */
+  standardIds?: StandardId[];
 }
 
 export interface ExamTopic {
