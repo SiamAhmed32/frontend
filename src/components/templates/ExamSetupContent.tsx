@@ -26,14 +26,12 @@ export default function ExamSetupContent() {
     }
   }, [dispatch, setup.subjectId, subjectId]);
 
-  const subjectTitle = subject?.title ?? 'পদার্থবিজ্ঞান';
-
   return (
     <main className="relative min-h-screen overflow-hidden px-5 pb-[128px] pt-8 sm:px-8 lg:px-12 lg:pt-[55px]">
-      <div className="relative mx-auto w-full max-w-[891px] lg:mx-0">
+      <div className="relative mx-auto w-full max-w-[891px]">
         <ExamStepHeader
           sectionLabel="পরীক্ষা দাও"
-          subjectTitle={subjectTitle}
+          subjectTitle={subject?.title ?? 'পদার্থবিজ্ঞান'}
           title="প্রশ্নের স্ট্যান্ডার্ড?"
           stepLabel="২/৩ স্টেপ"
           activeStepCount={2}

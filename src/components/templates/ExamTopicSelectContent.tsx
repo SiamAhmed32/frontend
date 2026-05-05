@@ -10,15 +10,16 @@ import { FixedBottomActionBar } from '@/components/organisms/FixedBottomActionBa
 import { TopicSelectionCard } from '@/components/organisms/TopicSelectionCard';
 import { selectSubject, setQuestionCount } from '@/features/exam/examSlice';
 import { selectExamSetup, selectSubjectById } from '@/features/exam/selectors';
-import {
-  ALL_PHYSICS_TOPIC_SELECTION_IDS,
-  firstPaperTopics,
-  secondPaperTopics,
-} from '@/features/exam/topicTree';
+import { getAvailableQuestionCount } from '@/features/exam/sessionQuestions';
+import { getDefaultTopicSelectionForSubject, getTopicTreeForSubject } from '@/features/exam/topicTree';
 import { useTopicSelection } from '@/features/exam/useTopicSelection';
+import { toBengaliDigits } from '@/lib/bengaliDigits';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
-const allTopicIds = ALL_PHYSICS_TOPIC_SELECTION_IDS;
+const paperTitle = (groupCount: number, index: number, fallback: string) => {
+  if (groupCount === 1) return fallback;
+  return index === 0 ? '১ম পত্র' : '২য় পত্র';
+};
 
 export function ExamTopicSelectContent() {
   const params = useParams<{ id?: string }>();
@@ -29,28 +30,33 @@ export function ExamTopicSelectContent() {
   const subject = useAppSelector((state) => selectSubjectById(state, subjectId));
 
   useEffect(() => {
-    // Always reset selection when entering step-1 route.
-    dispatch(selectSubject(subjectId));
-  }, [dispatch, subjectId]);
+    if (setup.subjectId !== subjectId) {
+      dispatch(selectSubject(subjectId));
+    }
+  }, [dispatch, setup.subjectId, subjectId]);
 
   const subjectTitle = subject?.title ?? 'পদার্থবিজ্ঞান';
+  const topicGroups = getTopicTreeForSubject(subjectId);
+  const allTopicIds = getDefaultTopicSelectionForSubject(subjectId);
   const selectedTopicIds = setup.selectedTopicIds.filter((topicId) => allTopicIds.includes(topicId));
-  const { expandedIds, toggleTopic, togglePaper, toggleExpand } = useTopicSelection(
-    allTopicIds,
-    selectedTopicIds
-  );
+  const availableQuestionCount = subject
+    ? getAvailableQuestionCount(subject, selectedTopicIds)
+    : 1;
+  const { expandedIds, toggleTopic, togglePaper, toggleExpand } = useTopicSelection(allTopicIds, selectedTopicIds);
+
+  useEffect(() => {
+    if (setup.questionCount > availableQuestionCount) {
+      dispatch(setQuestionCount(availableQuestionCount));
+    }
+  }, [availableQuestionCount, dispatch, setup.questionCount]);
 
   return (
     <main className="relative min-h-screen overflow-hidden px-5 pb-[142px] pt-8 sm:px-8 lg:px-12 lg:pt-[55px]">
-      <div className="relative mx-auto w-full max-w-[997px] lg:mx-0">
+      <div className="relative mx-auto w-full max-w-[997px]">
         <div className="flex min-h-[22px] flex-wrap items-center gap-2.5">
-          <span className="font-display-bn text-[20px] font-bold leading-none text-[#1C1C1C]">
-            পরীক্ষা দাও
-          </span>
+          <span className="font-display-bn text-[20px] font-bold leading-none text-[#1C1C1C]">পরীক্ষা দাও</span>
           <ChevronRight className="size-5 text-[#242424]" />
-          <span className="font-display-bn text-[16px] font-semibold leading-[140%] text-[#1C1C1C]">
-            {subjectTitle}
-          </span>
+          <span className="font-display-bn text-[16px] font-semibold leading-[140%] text-[#1C1C1C]">{subjectTitle}</span>
         </div>
 
         <section className="mt-4">
@@ -58,34 +64,25 @@ export function ExamTopicSelectContent() {
             <h1 className="font-display-bn text-[18px] font-semibold leading-[140%] text-[#101828]">
               কোন কোন টপিকের উপর পরীক্ষা দিতে চাও ?
             </h1>
-            <span className="shrink-0 font-display-bn text-[16px] font-semibold leading-[140%] text-[#1C1C1C]">
-              ১/৩ স্টেপ
-            </span>
+            <span className="shrink-0 font-display-bn text-[16px] font-semibold leading-[140%] text-[#1C1C1C]">১/৩ স্টেপ</span>
           </div>
           <StepProgress activeCount={1} />
         </section>
 
         <div className="mt-4 grid gap-6 xl:grid-cols-2 xl:px-10 xl:py-5">
-          <TopicSelectionCard
-            title="১ম পত্র"
-            topics={firstPaperTopics}
-            selectedTopicIds={selectedTopicIds}
-            expandedIds={expandedIds}
-            onToggleExpand={toggleExpand}
-            onTogglePaper={togglePaper}
-            onToggleTopic={toggleTopic}
-            className="xl:min-h-[861px]"
-          />
-          <TopicSelectionCard
-            title="২য় পত্র"
-            topics={secondPaperTopics}
-            selectedTopicIds={selectedTopicIds}
-            expandedIds={expandedIds}
-            onToggleExpand={toggleExpand}
-            onTogglePaper={togglePaper}
-            onToggleTopic={toggleTopic}
-            className="xl:min-h-[545px]"
-          />
+          {topicGroups.map((topics, index) => (
+            <TopicSelectionCard
+              key={`${subjectId}-${index}`}
+              title={paperTitle(topicGroups.length, index, subjectTitle)}
+              topics={topics}
+              selectedTopicIds={selectedTopicIds}
+              expandedIds={expandedIds}
+              onToggleExpand={toggleExpand}
+              onTogglePaper={togglePaper}
+              onToggleTopic={toggleTopic}
+              className="xl:min-h-[545px]"
+            />
+          ))}
         </div>
       </div>
 
@@ -95,7 +92,10 @@ export function ExamTopicSelectContent() {
           <LabeledNumberField
             id="question-count"
             label="প্রশ্ন সংখ্যা"
+            helperText={`৫ থেকে সর্বোচ্চ ${toBengaliDigits(availableQuestionCount)}টি প্রশ্ন নেওয়া যাবে`}
             value={setup.questionCount ?? 12}
+            min={5}
+            max={availableQuestionCount}
             onChange={(value) => dispatch(setQuestionCount(value))}
           />
         }
@@ -106,11 +106,10 @@ export function ExamTopicSelectContent() {
             className="h-[54px] rounded-[10px] bg-[#7311A0] px-5 py-4 font-display-bn text-[16px] font-bold leading-6 text-white hover:bg-[#681091] sm:w-[251px]"
             onClick={() => router.push(`/exams/${subjectId}/standard`)}
           >
-            এগিয়ে যাও
+            এগিয়ে যাও
           </Button>
         }
       />
     </main>
   );
 }
-
